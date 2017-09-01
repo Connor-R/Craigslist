@@ -1,4 +1,4 @@
 # Craigslist
 This project is licensed under the terms of the MIT license.
 
-Using the craigslist python package, I scrape and categorize local apartment listings that fit my budget and e-mail myself new results every few hours. This eliminates the need to constantly check craigslist manually and scroll through the results for new postings.
+  Using the craigslist python package, I scrape and categorize local apartment listings that fit my budget and e-mail myself new results every 2 hours. In addition to generating a dataset for future analysis on the topic of apartments in my region, this set of scripts eliminates the need to constantly check craigslist manually and scroll through the results for new postings. I'm hopeful that this project will help me navigate the tough task of not drastically overpaying for housing in the brutal Northern California region.
