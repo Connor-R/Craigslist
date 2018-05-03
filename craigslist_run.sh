@@ -1,3 +1,5 @@
+SHELL=/bin/bash
+source "/Users/connordog/.bash_profile"
 
 python craigslist_scraper.py
 

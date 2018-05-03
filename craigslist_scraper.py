@@ -3,7 +3,6 @@ import argparse
 from craigslist import CraigslistHousing, CraigslistJobs, CraigslistForSale
 import MySQLdb
 
-sys.path.append('/Users/connordog/Dropbox/Desktop_Files/Work_Things/CodeBase/Python_Scripts/Python_Projects/packages')
 
 from py_db import db
 
