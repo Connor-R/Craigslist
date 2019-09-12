@@ -24,13 +24,13 @@ with open(key_file, 'rU') as f:
 
 def generate_body(type):
     mesg = ''
-    sub = "New Listings (Mackenzie's Truck Preferences) [%s]" % (str(date.today()))
+    sub = "New Listings (Matt's Truck Preferences) [%s]" % (str(date.today()))
 
     i = 1
     ids = []
-    for search_type in ('m1',):
-        if search_type == 'm1':
-            search_title = 'Toyota Tacoma - <150k Miles - <$15k - V6'
+    for search_type in ('mhop',):
+        if search_type == 'mhop':
+            search_title = '4WD - <30000 miles - <$30k'
             mesg += '\n\n-------------------------------------------\n'
             mesg += 'Category #' + str(i) + ' %s\n\n' % (search_title)
 
@@ -67,7 +67,7 @@ ORDER BY has_image+has_map DESC, list_price ASC"""
         ids.append(cl_id)
 
         mesg += str(j+1) + '. ' + title 
-        mesg += '\n' + str(cl_id) + ' : ' + str(bool(has_image)) + ' image : ' + str(bool(has_map)) + ' map'
+        # mesg += '\n' + str(cl_id) + ' : ' + str(bool(has_image)) + ' image : ' + str(bool(has_map)) + ' map'
         mesg += '\n$' + str(list_price) + ' : ' + str(sub_site) + '\n'
         mesg += '\t' + url + '\n\n'
         j += 1
@@ -92,7 +92,7 @@ def log_ids(ids):
 def email(sub, mesg):
     email_address = "connor.reed.92@gmail.com"
     fromaddr = email_address
-    toaddr = "gomacatak@sbcglobal.net"
+    toaddr = "Matthoppy92@gmail.com"
     bcc_addr = email_address
     msg = MIMEMultipart()
     msg['From'] = fromaddr

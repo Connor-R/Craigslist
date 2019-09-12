@@ -2,6 +2,7 @@ import sys
 import argparse
 from craigslist import CraigslistHousing, CraigslistJobs, CraigslistForSale
 import MySQLdb
+from time import sleep
 
 
 from py_db import db
@@ -50,9 +51,14 @@ def scrape_vehicles(site, category, site_abb, filt):
 
     results = cl.get_results(sort_by='newest', geotagged=True)
 
-    # print len(results)
+    # raw_input(results)
+    # print len(list(results))
+    # sleep(5)
 
-    for result in results:
+    for i, result in enumerate(results):
+        if i % 50 == 0:
+            print i
+        # raw_input(result)
         result['mackenzie_search'] = mac_search
         result['site_abb'] = site_abb
         result['cl_id'] = result.pop('id')
@@ -72,9 +78,15 @@ def scrape_vehicles(site, category, site_abb, filt):
             if is_ascii(v) is False:
                 result[k] = result['cl_id']
 
-        del result['geotag']
+        if result['repost_of'] is not None:
+            continue
 
+        del result['geotag']
+        del result['repost_of']
+
+        # raw_input(result)
         # print result['cl_id'], result['title']
+        
         curr_dupe = check_car_dupes(result, 'current')
         if curr_dupe is False:
             db.insertRowDict(result, 'cars_current', replace=True, insertMany=False)
@@ -84,6 +96,8 @@ def scrape_vehicles(site, category, site_abb, filt):
             if prev_dupe is False:
                 db.insertRowDict(result, 'cars_all', replace=True, insertMany=False)
                 db.conn.commit()
+
+    print str(i), 'new posts'
 
 def scrape_apartments(site, category, site_abb, filt):
     def check_apt_dupes(result, current):
@@ -165,14 +179,14 @@ if __name__ == "__main__":
     parser.add_argument('--site',       default='sfbay')
     parser.add_argument('--site_abbs',  default=['scz',])
     parser.add_argument('--search_type',    default=[
-        {'roo':{'max_price':1300, 'min_price':500, 'max_bedrooms':1, 'private_room':True, 'cats_ok':True}},
-        {'roo':{'max_price':1300, 'min_price':500, 'max_bedrooms':1, 'private_room':True, 'cats_ok':False}},
-        {'apa':{'max_price':1300, 'min_price':500, 'max_bedrooms':1, 'private_room':True, 'cats_ok':True}},
-        {'apa':{'max_price':1300, 'min_price':500, 'max_bedrooms':1, 'private_room':True, 'cats_ok':False}},
-        {'apa':{'max_price':2400, 'min_price':500, 'max_bedrooms':2, 'private_room':True, 'min_bedrooms':2, 'cats_ok':True}},
-        {'apa':{'max_price':2400, 'min_price':500, 'max_bedrooms':2, 'private_room':True, 'min_bedrooms':2, 'cats_ok':False}},
+        # {'roo':{'max_price':1300, 'min_price':500, 'max_bedrooms':1, 'private_room':True, 'cats_ok':True}},
+    #     {'roo':{'max_price':1300, 'min_price':500, 'max_bedrooms':1, 'private_room':True, 'cats_ok':False}},
+    #     {'apa':{'max_price':1300, 'min_price':500, 'max_bedrooms':1, 'private_room':True, 'cats_ok':True}},
+    #     {'apa':{'max_price':1300, 'min_price':500, 'max_bedrooms':1, 'private_room':True, 'cats_ok':False}},
+    #     {'apa':{'max_price':2400, 'min_price':500, 'max_bedrooms':2, 'private_room':True, 'min_bedrooms':2, 'cats_ok':True}},
+    #     {'apa':{'max_price':2400, 'min_price':500, 'max_bedrooms':2, 'private_room':True, 'min_bedrooms':2, 'cats_ok':False}},
         # {'cta':{'max_price':15000, 'min_price':1000, 'max_miles':150000, 'model':['Toyota Tacoma'], 'auto_cylinders':'6 cylinders', 'auto_title_status':'clean', 'search_distance':200, 'zip_code':95060, 'mackenzie_search':'m1'}},
-        # {'cta':{'has_image':True, 'max_price':15000, 'min_price':1000, 'max_miles':150000, 'auto_title_status':'clean', 'auto_bodytype':['pickup', 'truck'], 'model':['nissan', 'toyota', 'honda'], 'search_distance':200, 'zip_code':95060}},
+        {'cta':{'has_image':True, 'max_price':30000, 'min_price':5000, 'max_miles':30000, 'auto_title_status':'clean', 'auto_bodytype':['pickup', 'truck'], 'search_distance':200, 'zip_code':95060, 'auto_drivetrain':'4wd', 'mackenzie_search':'mhop'}},
         ])
 
     args = parser.parse_args()
